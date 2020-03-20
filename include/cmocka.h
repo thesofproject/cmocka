@@ -160,6 +160,14 @@ cast_to_largest_integral_type(cast_to_pointer_integral_type(value))
 #define CMOCKA_PRINTF_ATTRIBUTE(a,b)
 #endif /* __GNUC__ */
 
+#ifdef __GNUC__
+#define CMOCKA_NORETURN __attribute__ ((noreturn))
+#elif __clang_analyzer__
+#define CMOCKA_NORETURN __attribute__ ((analyzer_noreturn))
+#else
+#define CMOCKA_NORETURN
+#endif
+
 #if defined(__GNUC__)
 #define CMOCKA_DEPRECATED __attribute__ ((deprecated))
 #elif defined(_MSC_VER)
@@ -2308,7 +2316,7 @@ void* _test_calloc(const size_t number_of_elements, const size_t size,
                    const char* file, const int line);
 void _test_free(void* const ptr, const char* file, const int line);
 
-void _fail(const char * const file, const int line);
+void _fail(const char * const file, const int line) CMOCKA_NORETURN;
 
 void _skip(const char * const file, const int line);
 
